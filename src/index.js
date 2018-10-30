@@ -1,16 +1,24 @@
-import './index.scss';
-import json from './test';
-import txt from './file.txt';
-import svg from './home.svg';
-console.log(777666633337);
-console.log(json);
-console.log(txt);
-console.log(svg);
-new Promise(res => {
-    res();
-})
+import { h, render } from 'preact';
+import { Provider } from 'preact-redux';
+import { createStore } from 'redux';
+import reducer from './reducers';
+// import App from './components/app';
 
-const a = ['1111111',2,3];
-const b = [4,5,6];
-const c = [...a, ...b];
-console.log(c, 'ccccc');
+// import './style';
+
+const INITIAL = {};
+const store = createStore( reducer, INITIAL, typeof window.devToolsExtension==='function' ? window.devToolsExtension() : undefined);
+
+window.onresize = () => {
+	window.location.reload();
+};
+let root;
+function init() {
+	let App = require('./components/app').default;
+	root = render(<Provider store={store}><App/></Provider>, document.body, root);
+}
+
+init();
+
+
+

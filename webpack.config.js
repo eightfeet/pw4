@@ -1,6 +1,9 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -8,16 +11,15 @@ module.exports = (env, argv) => {
     const isUat = argv.isuat === 'true' ? true : false;
     const isPro = !isUat && argv.mode === 'production';
     const isDev = argv.mode === 'development';
-    const isCdn = false;
-    const cdn = 'cdnPath';
+    const cdn = null;
 
     return {
         context: path.resolve(__dirname, 'src'),
         entry: ['./core/polyfill.js', './index.js'],
         output: {
             path: path.resolve(__dirname, "build"),
-            publicPath: isCdn ? `${cdnPath}/` : "./",
-            filename: "bundle.js"
+            publicPath: cdn ? `${cdn}/` : "./",
+            filename: isPro ? 'bundle.[hash:6].js' : 'bundle.js'
         },
         resolve: {
             extensions: [".jsx", ".js", ".json", ".less", ".scss", ".css"],
@@ -84,13 +86,32 @@ module.exports = (env, argv) => {
             ]
         },
         plugins: [
+            new webpack.NoEmitOnErrorsPlugin(),
             new HtmlWebpackPlugin(),
             new MiniCssExtractPlugin({
                 // Options similar to the same options in webpackOptions.output
                 // both options are optional
-                filename: isPro ? '[name].css' : '[name].[hash].css',
-                chunkFilename: isPro ? '[id].css' : '[id].[hash].css',
-            })
+                filename: !isPro ? '[name].css' : '[name].[hash:6].css',
+                chunkFilename: !isPro ? '[id].css' : '[id].[hash:6].css',
+            }),
+            new webpack.DefinePlugin({
+                __UAT__: isUat,
+                __PRO__: isPro,
+                __PUBLICKPATH__: JSON.stringify(cdn ? `${cdn}/` : "./")
+            }),
+            new OptimizeCssAssetsPlugin({
+                // css压缩
+                cssProcessor: require('cssnano'),
+                cssProcessorPluginOptions: {
+                  preset: ['default', { discardComments: { removeAll: true } }],
+                },
+                canPrint: true
+            }),
+            new CopyWebpackPlugin([
+                { from: "./manifest.json", to: "./" },
+                { from: "./favicon.ico", to: "./" },
+                { from: "./assets", to: "./assets" }
+            ])
         ],
         devServer: {
             port: process.env.PORT || 8080,

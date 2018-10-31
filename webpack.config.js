@@ -65,8 +65,8 @@ module.exports = (env, argv) => {
 						preset: ['default', { discardComments: { removeAll: true } }]
 					},
 					canPrint: true
-				})]
-				.concat(isPro || isUat ? [new UglifyJsPlugin({
+				}),
+				new UglifyJsPlugin({
 					uglifyOptions: {
 						output: {
 							comments: false
@@ -94,7 +94,8 @@ module.exports = (env, argv) => {
 							drop_console: isPro
 						}
 					}
-				})] : [])
+				})
+			]
 		},
 		module: {
 			rules: [

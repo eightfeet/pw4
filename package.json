@@ -5,10 +5,9 @@
   "private": true,
   "scripts": {
     "build": "rm -rf ./build && webpack --mode=production",
-    "build:dev": "rm -rf ./build && webpack --mode=development",
     "build:uat": "rm -rf ./build && webpack --mode=production --isuat=true",
     "dev": "webpack-dev-server --mode=development",
-    "report": "yarn build --report"
+    "report": "npm run build --report"
   },
   "author": "",
   "license": "ISC",

@@ -11,7 +11,7 @@ module.exports = (env, argv) => {
 	// 环境
 	const isUat = argv.isuat === 'true' ? true : false;
 	const isPro = !isUat && argv.mode === 'production';
-	const cdn = null;
+	const cdn = process.env.PUBLIC_PATH || null;
 
 	return {
 		context: path.resolve(__dirname, 'src'),
@@ -205,7 +205,6 @@ module.exports = (env, argv) => {
 				__PUBLICKPATH__: JSON.stringify(cdn ? `${cdn}/` : './')
 			}),
 			new CopyWebpackPlugin([
-				{ from: './manifest.json', to: './' },
 				{ from: './favicon.ico', to: './' },
 				{ from: './assets', to: './assets' }
 			])

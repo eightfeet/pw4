@@ -1,0 +1,15 @@
+/* Citing public styles */
+@import './reset.scss';
+html {
+    body {
+        background-color: $white;
+        transform: translateX('300');
+    }
+}
+
+.test {
+    background-color: #eee;
+    background: url(./../check.png);
+}
+
+

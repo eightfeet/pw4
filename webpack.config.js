@@ -12,7 +12,6 @@ module.exports = (env, argv) => {
 	const isUat = argv.isuat === 'true' ? true : false;
 	const isPro = !isUat && argv.mode === 'production';
 	const cdn = process.env.PUBLIC_PATH || null;
-
 	return {
 		context: path.resolve(__dirname, 'src'),
 		entry: ['./core/polyfill.js', './index.js'],

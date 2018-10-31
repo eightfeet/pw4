@@ -7,7 +7,7 @@
     "build": "rm -rf ./build && webpack --mode=production",
     "build:uat": "rm -rf ./build && webpack --mode=production --isuat=true",
     "dev": "webpack-dev-server --mode=development",
-    "report": "npm run build --report"
+    "report": "rm -rf ./build && webpack --mode=production --report=true"
   },
   "author": "",
   "license": "ISC",
